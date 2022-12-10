@@ -1,2 +1,5 @@
 /venv
 .idea
+test/
+test2/
+__pycache__/
