@@ -252,7 +252,46 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
+        numGhosts = gameState.getNumAgents() - 1
+        return self.maximize(gameState, 1, numGhosts)
+
+    def maximize(self,gameState, depth, numGhosts):
+        if gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState)
+        maxValue = float('-inf')
+        bestAction = Directions.STOP
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0,action)
+            tempValue = self.getExpectValue(successor,depth,1,numGhosts)
+            if maxValue < tempValue:
+                maxValue = tempValue
+                bestAction = action
+        
+        if depth > 1:
+            return maxValue
+        return bestAction
+
+    def getExpectValue(self,gameState, depth,agentIndex, numGhosts):
+        if gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState)
+        
+        expectValue = 0
+        legalActions = gameState.getLegalActions(agentIndex)
+        successorProbability = 1.0 / len(legalActions)
+
+        for action in legalActions:
+            successor = gameState.generateSuccessor(agentIndex,action)
+            if agentIndex == numGhosts:
+                if depth < self.depth:
+                    expectValue += successorProbability * self.maximize(successor,depth+1,numGhosts)
+                else:
+                    expectValue += successorProbability * self.evaluationFunction(successor)
+            else:
+                expectValue += successorProbability * self.getExpectValue(successor,depth,agentIndex+1,numGhosts)
+        
+        return expectValue
+
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -262,7 +301,29 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()    
+    pacmanPosition = currentGameState.getPacmanPosition()
+    food = currentGameState.getFood()
+    foodPosition = food.asList()
+    foodPosition = sorted(foodPosition,key = lambda position: manhattanDistance(pacmanPosition,position))
+    closestFoodDistance = -1
+    if len(foodPosition) > 0:
+        closestFoodDistance = manhattanDistance(foodPosition[0], pacmanPosition)
+
+    distanceToGhost = 1
+    proximityToGhost = 0
+    for ghostState in currentGameState.getGhostStates():
+        distance = manhattanDistance(pacmanPosition, ghostState.getPosition())
+        distanceToGhost += distance
+
+        if distance <= 1:
+            proximityToGhost += 1
+
+    newCapsules = currentGameState.getCapsules()
+    numberOfCapsules = len(newCapsules)
+    return currentGameState.getScore() + (1/float(closestFoodDistance)) - (1/float(distanceToGhost)) - proximityToGhost - numberOfCapsules
+
+
+    # util.raiseNotDefined()    
 
 # Abbreviation
 better = betterEvaluationFunction

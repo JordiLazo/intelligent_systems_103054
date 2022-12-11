@@ -1,4 +1,4 @@
-# 103054_Intelligent_Systems
+# 103054 - Intelligent Systems
 
 ## Summary
 1. [Introduction](#introduction)
@@ -26,15 +26,22 @@ The topics of the subject are the following:
 
 ## Assignment 1
 For the first assignment, you have to work on the "PacMan" project. In particular, you must implement the following algorithms:
+- Question 1: Reflex Agent (0 points)
+- Question 2: Minimax (2.5 points)
+- Question 3: Alpha-Beta Pruning (2.5 points)
+- Question 4: Expectimax (2.5 points)
+- Question 5: Evaluation Function (2.5 points)
+- As an optional task, you can develop the iterative version of the Alpha-Beta algorithm.
+
+The algorithms must be implemented in the file: *multiAgents.py*
+
+In order to check that the answers are good the following command must be executed:
+```
+python autograder.py
+```
+
+The original project can be found in the following link: 
 https://inst.eecs.berkeley.edu/~cs188/sp21/project2/
-
-- Alpha-Beta (recursive): 2.5 points
-
-- Expectimax (recursive): 2.5 points
-
-- Evaluation function: 2.5 points
-
-- Mini-Max (iterative): 2.5 points
 ## Assignment 2
 
 ## Assignment 3
