@@ -40,6 +40,11 @@ In order to check that the answers are good the following command must be execut
 python autograder.py
 ```
 
+Example:
+```
+
+```
+
 The original project can be found in the following link: 
 https://inst.eecs.berkeley.edu/~cs188/sp21/project2/
 ## Assignment 2
