@@ -40,13 +40,44 @@ In order to check that the answers are good the following command must be execut
 python autograder.py
 ```
 
-Example:
-```
-
-```
-
 The original project can be found in the following link: 
 https://inst.eecs.berkeley.edu/~cs188/sp21/project2/
-## Assignment 2
 
+## Assignment 2
+On the second assignment we revisit the "PacMan" project, but this time you will work with reinforcement learning.
+
+As with the Adversarial-Search assignment, all the material can be found in: https://inst.eecs.berkeley.edu/~cs188/su21/project3/.
+
+From the project page download the zip file and complete the following tasks, at the end you will have to deliver the whole "PacMan" project including modified, unmodified and added files as a .zip file.
+
+1. Implement the Value Iteration algorithm in valueIterationAgents.py, for this you have to implement the methods computeActionFromValue (state) and computeQValueFromValues(state, action) (2 points)
+
+2. Bridge Crossing Analysis (0.5 point).
+    * The agent starts near the low-reward state. With the default discount of 0.9 and the default noise of 0.2, the optimal policy does not corss the bridge.
+
+    <img src="./images/value-q2.png" width="500" height="300" alt="Result of work package 1" title="Result of work package 1" style="display: block; margin: 0 auto"/>
+
+    * Change only ONE of the discount and noise parameters so that the optimal policy causes the agent to cross the bridge. Put your answer in question2() of analysis.py.
+
+3. Find the discount, noise and living reward values that generate the following policies in analysis.py, functions question2a() through question2e(). (1.5 point)
+
+    <img src="./images/discountgrid.png" width="500" height="300" alt="Result of work package 1" title="Result of work package 1" style="display: block; margin: 0 auto"/>
+    
+   * Prefer the close exit (+1), risking the cliff (-10)
+   * Prefer the close exit (+1), but avoiding the cliff (-10)
+   * Prefer the distant exit (+10), risking the cliff (-10)
+   * Prefer the distant exit (+10), avoiding the cliff (-10)
+   * Avoid both exits and the cliff (an episode should never terminate)
+   * Your setting of the values should have the property that, if your agent followed its optimal policy in the MDP, it would exhibit the given behaviour. If a particular behaviour cannot be achieved for any setting of parameters return the string 'NOT POSSIBLE'.
+
+4. Q-Learning Agent (2.5 points).
+    * Implement the update, computeValueFromQValues, getQValue and computeActionFromQValues methods in qlearningAgents.py.
+
+5. Epsilon Greedy (1 point)
+    * Complete the Q-learning agent in qlearningAgents.py by implementing the getAction method implementing epsilon-greedy action selection.
+    * You can choose an element from a list by calling random.choice(...) and simulate a binary variable with probability p using util.flipCoin(p).
+
+6. Approximate Q-Learning (2.5 points)
+    * Implement the getQValue and update methods in ApproximateQAgent class in qlearningAgents.py.
+    * Important: ApproximateQAgent is a subclass of QLearningAgent, for the ApproximateQAgent to work as expected make sure that your methods in QLearningAgent call getQValue instead of accessing the Q-values directly.
 ## Assignment 3
