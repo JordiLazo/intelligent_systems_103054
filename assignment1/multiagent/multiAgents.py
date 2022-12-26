@@ -179,7 +179,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 v = min(v,self.min_value(successor,agent=agent+1,depth=depth))
         return v
 
-        #util.raiseNotDefined()
     def max_value(self,gameState,agent,depth):
         if self.terminal_test(gameState,depth):
             return self.evaluationFunction(gameState)
@@ -244,17 +243,41 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       Your expectimax agent (question 4)
     """
     def getAction(self, gameState):
-        def expectimax(state, depth, agentIndex):
-            if state.isWin() or state.isLose() or depth == 0:
-                return self.evaluationFunction(state)
-            if agentIndex == 0:  # Pacman
-                return max(expectimax(state.generateSuccessor(agentIndex, action), depth - 1, 1)
-                           for action in state.getLegalActions(agentIndex))
-            else:  # Ghost
-                return sum(expectimax(state.generateSuccessor(agentIndex, action), depth, agentIndex + 1)
-                           for action in state.getLegalActions(agentIndex)) / len(state.getLegalActions(agentIndex))
+        v = float("-inf")
+        actions = []
+        for a in gameState.getLegalActions(agentIndex=0):
+            successor = gameState.getNextState(agentIndex=0,action=a)
+            undefined = self.exp_value(successor,agent = 1,depth= self.depth)
+            if undefined == v:
+                actions.append(a)
+            elif undefined > v:
+                v = undefined
+                actions = [a]
+        
+        return actions[0]
+    def max_value(self, gameState, agent, depth):
+        if self.terminal_test(gameState, depth):
+            return self.evaluationFunction(gameState)
 
-        return max(gameState.getLegalActions(0), key=lambda x: expectimax(gameState.generateSuccessor(0, x), self.depth, 1))
+        v = float("-inf")
+        for a in gameState.getLegalActions(agent):
+            successor = gameState.getNextState(agent, action=a)
+            v = max(v, self.exp_value(successor, agent=1, depth=depth))
+        return v
+
+    def exp_value(self, gameState, agent, depth):
+        if self.terminal_test(gameState, depth):
+            return self.evaluationFunction(gameState)
+
+        v = 0
+        legal_actions = len(gameState.getLegalActions(agent))
+        for a in gameState.getLegalActions(agent):
+            successor = gameState.getNextState(agent, action=a)
+            if agent == gameState.getNumAgents() - 1:
+                v += 1/legal_actions* self.max_value(successor,0,depth-1)
+            else:
+                v += 1/legal_actions* self.exp_value(successor,agent+1,depth)
+        return v
 
 
 def betterEvaluationFunction(currentGameState):
