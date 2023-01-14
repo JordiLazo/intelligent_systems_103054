@@ -64,10 +64,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         allowed_actions = self.getLegalActions(state)
-        if len(allowed_actions) == 0:
-          return 0.0
-        best_action = self.getPolicy(state)
-        return self.getQValue(state,best_action)
+        return self.getQValue(state, self.getPolicy(state)) if allowed_actions else 0.0
 
     def computeActionFromQValues(self, state):
         """
@@ -76,20 +73,12 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
-        legalActions = self.getLegalActions(state)
-        if len(legalActions) == 0:
+        legal_actions = self.getLegalActions(state)
+        if not legal_actions:
             return None
-        actionVals = {}
-        bestQValue = float('-inf')
-        for action in legalActions:
-            targetQValue = self.getQValue(state, action)
-            actionVals[action] = targetQValue
-            if targetQValue > bestQValue:
-                bestQValue = targetQValue
-        bestActions = [k for k,v in actionVals.items() if v == bestQValue]
-        # random tie-breaking
-        return random.choice(bestActions)
-
+        best_qvalue = max(self.getQValue(state, action) for action in legal_actions)
+        best_actions = [action for action in legal_actions if self.getQValue(state, action) == best_qvalue]
+        return random.choice(best_actions)
 
 
     def getAction(self, state):
@@ -107,16 +96,13 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        if len(legalActions) == 0:
-          return None
-        action = None
-        if not util.flipCoin(self.epsilon):
-          action = self.getPolicy(state)
+        legal_actions = self.getLegalActions(state)
+        if not legal_actions:
+            return None
+        if util.flipCoin(self.epsilon):
+            return random.choice(legal_actions)
         else:
-          action = random.choice(legalActions)
-        return action
-
-        return action
+            return self.getPolicy(state)
 
     def update(self, state, action, nextState, reward):
         """

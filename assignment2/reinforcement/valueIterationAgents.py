@@ -90,13 +90,8 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        next_transitions = self.mdp.getTransitionStatesAndProbs(state,action)
-        new_value = 0
-        for (next_state,probs) in next_transitions:
-            next_reward = self.mdp.getReward(state,action,next_state)
-            future_qval = self.getValue(next_state)
-            new_value += probs * (next_reward + self.discount * future_qval)
-        return new_value
+        next_transitions = self.mdp.getTransitionStatesAndProbs(state, action)
+        return sum(prob * (self.mdp.getReward(state, action, next_state) + self.discount * self.getValue(next_state)) for next_state, prob in next_transitions)
 
     def computeActionFromValues(self, state):
         """
@@ -112,10 +107,8 @@ class ValueIterationAgent(ValueEstimationAgent):
             return None
         else:
             all_actions = self.mdp.getPossibleActions(state)
-            q_values = util.Counter()
-            for action in all_actions:
-                q_values[action] = self.getQValue(state,action)
-            return q_values.argMax()
+            q_values = {action: self.getQValue(state, action) for action in all_actions}
+            return max(q_values, key=q_values.get)
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
