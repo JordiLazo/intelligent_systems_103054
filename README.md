@@ -80,4 +80,3 @@ From the project page download the zip file and complete the following tasks, at
 6. Approximate Q-Learning (2.5 points)
     * Implement the getQValue and update methods in ApproximateQAgent class in qlearningAgents.py.
     * Important: ApproximateQAgent is a subclass of QLearningAgent, for the ApproximateQAgent to work as expected make sure that your methods in QLearningAgent call getQValue instead of accessing the Q-values directly.
-## Assignment 3
